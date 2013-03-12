@@ -16,16 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-To Do:
-- A largura do legend_box ainda nao esta perfeita
-- Pegar cor (definir alguns esquemas ou gerar as cores?)
-- Colocar porcentagens ao redor do grafico
-- Tentar simplificar a parte dos setAttribute
-- Tentar modularizar alguns procedimentos
-- Gerar tambem grafico de colunas e crescimento
-- Adicionar opcoes: tipo de grafico, esquema de cores, separar fatias(s/n/qt), mostrar legenda(s/n)
-- Revisar comentarios
-
 '''
 import math, inkex, simplestyle
 
