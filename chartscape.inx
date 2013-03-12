@@ -1,0 +1,19 @@
+<inkscape-extension>
+	<_name>ChartScape</_name>
+	<id>dcc.ufba.br.chartscape</id>
+	<dependency type="executable" location="extensions">chartscape.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<dependency type="executable" location="extensions">simplestyle.py</dependency>
+	<param name="title" type="string" _gui-text="Title">ChartScape</param>
+	<param name="values" type="string" _gui-text="Values (separated by spaces)">10 15 25 50</param>
+	<param name="size" type="float" min="100.00" max="1000.00" _gui-text="Size">500</param>
+	<effect>
+		<object-type>all</object-type>
+			<effects-menu>
+				<submenu _name="Render" />
+			</effects-menu>
+	</effect>
+	<script>
+		<command reldir="extensions" interpreter="python">chartscape.py</command>
+	</script>
+</inkscape-extension>
