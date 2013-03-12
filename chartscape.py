@@ -15,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 '''
 import math, inkex, simplestyle
 
@@ -31,15 +30,26 @@ class statisticsGraph(inkex.Effect):
 			action="store", type="string",
 			dest="values", default="10 15 25 50",
 			help="Values to be represented on the graph (separated by spaces)")
+                self.OptionParser.add_option("-l", "--labels",
+			action="store", type="string",
+			dest="labels", default="a b c d",
+			help="Labels sequence need to follow the same sequence of its values")
 		self.OptionParser.add_option("-s", "--size",
 			action="store", type="float",
 			dest="size", default=500.00,
 			help="Size of the graph")
+		self.OptionParser.add_option("-c", "--color",
+			action="store", type="string",
+			dest="color", default="blue",
+			help="Color of the graph")
 	
+
 	def effect(self):
 		
 		# Gets values as an array of strings
 		values = self.options.values.split(' ')
+                # Gets labels as an array of strings
+                labels = self.options.labels.split(' ')
 		
 		# Dimensions based on the size parameter
 		size = self.options.size
@@ -127,10 +137,13 @@ class statisticsGraph(inkex.Effect):
 		legend.append(legend_box)
 		
 		# Color themes
-		theme = 'blue'
+		theme = self.options.color
 		colors = {
 			'blue'     : [ '#216778', '#2C89A0', '#37ABC8', '#5FBCD3', '#CFDCE6', '#406480', '#507EA1', '#00487D' ],
-			'orange'   : [ '#c50404', '#af7704', '#f6d295', '#d9bb7a', '#f44800', '#fb8b00', '#eec73e', '#f0a513' ]
+			'orange'   : [ '#c50404', '#af7704', '#f6d295', '#d9bb7a', '#f44800', '#fb8b00', '#eec73e', '#f0a513' ],
+			'green'    : [ '#11772D', '#00BB27', '#75DB1B', '#3ED715', '#22EE5B', '#7DF481', '#9CFF88', '#DFFFC0' ],
+			'red'      : [ '#AB2931', '#D80D2C', '#FF2C18', '#E6222B', '#FF3F31', '#FF594E', '#F9B3B3', '#FDDCD3' ]
+		
 		}
 
 		# We need to store previous values to generate a new arc
@@ -150,7 +163,7 @@ class statisticsGraph(inkex.Effect):
 			total += int(i)
 		
 		# Iterates with each value by creating an arc
-		antx = anty = 0
+		antx = anty = i = 0
 		for value in values:
 			arc_style = {
 				'stroke'          : 'white',
@@ -202,7 +215,8 @@ class statisticsGraph(inkex.Effect):
 				arc.set('cy',str(center))
 	
 			# Sets other attributes of the arc and inserts it in the graph
-			color = colors[theme].pop()
+			color = colors[theme][i%len(colors[theme])]
+			i+=1
 			arc.set('fill',color)
 			arc.set('id','arc'+str(n))
 			arc.set('style',simplestyle.formatStyle(arc_style))
@@ -272,10 +286,27 @@ class statisticsGraph(inkex.Effect):
 			label_abs.set('style',simplestyle.formatStyle(label_abs_style))
 			label_abs.text = str(int(value))
 			legend.append(label_abs)
+                        
+                        lindex = values.index(str(int(value)))
+                        label = labels[lindex]
+                        # Creates the third label (which represents name)
+			label_abs_style = {
+				'font-size' : str(label_size)+'px',
+				'font-family' : 'sans-serif',
+				'fill' : 'black'
+			}
+			label_name = inkex.etree.SubElement(svg, 'text')
+			label_name.set('id','label_name'+str(n))
+			label_name.set('x',str(size*1.188))
+			label_name.set('y',str(h))
+			label_name.set('style',simplestyle.formatStyle(label_abs_style))
+			label_name.text = str(label)
+			legend.append(label_name)
 			
 			# Calculates legend box width and height
 			legend_box.set('height',str(float(cell.get('y'))+float(cell.get('height'))*1.24-float(legend_box.get('y'))))
-			width = len(str(int(value)))*label_size*0.74 + float(label_abs.get('x'))
+			if len(label_name.text) == 1: width = 2.0*label_size
+			width += len(str(int(value)))*label_size*0.74 + float(label_abs.get('x')) + float(len(label_name.text))*label_size
 			if width > longest: longest = width
 			
 			n+=1
