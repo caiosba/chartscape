@@ -49,7 +49,12 @@ class statisticsGraph(inkex.Effect):
 		# Gets values as an array of strings
 		values = self.options.values.split(' ')
                 # Gets labels as an array of strings
-                labels = self.options.labels.split(' ')
+                labels = self.options.labels.split('|')
+                
+                #convert to utf-8 string inputs 
+                self.options.title = unicode(self.options.title, "utf-8")                
+                for i in range(len(labels)):
+                  labels[i] = unicode(labels[i], "utf-8")
 		
 		# Dimensions based on the size parameter
 		size = self.options.size
@@ -161,9 +166,25 @@ class statisticsGraph(inkex.Effect):
 		total = 0		
 		for i in values:
 			total += int(i)
+			
+		#total label below title
+		textStyle = {
+			'font-size'   : str(label_size),
+			'font-family' : 'sans-serif',
+			'text-anchor' : 'middle',
+			'fill'        : 'orange'
+		}
+		totalLabel = inkex.etree.SubElement(svg, 'text')
+		totalLabel.set('id','totalLabel')
+		totalLabel.set('x',str(size*0.8))
+		totalLabel.set('y',str(center*0.275))
+		totalLabel.set('style',simplestyle.formatStyle(textStyle))
+		totalLabel.text = "(" + str(total) + ")"
+		container.append(totalLabel)
+		
 		
 		# Iterates with each value by creating an arc
-		antx = anty = i = 0
+		antx = anty = i = width = 0 
 		for value in values:
 			arc_style = {
 				'stroke'          : 'white',
@@ -238,9 +259,22 @@ class statisticsGraph(inkex.Effect):
 			if abs_per < 50:
 				arc_label.set('x',str(rvector_x+center))
 				arc_label.set('y',str(rvector_y+center))
+			elif abs_per == 50: 
+				arc_label.set('x',str(center - r*1.3))
+				arc_label.set('y',str(center))
 			else:
-				arc_label.set('x',str(center-rvector_x*1.2))
-				arc_label.set('y',str(center-rvector_y*1.2))
+				if mpoint_x < 0 and mpoint_y < 0: 
+					arc_label.set('x',str(center+ rvector_x*1.2))
+					arc_label.set('y',str(center-rvector_y*1.2))
+				elif mpoint_x > 0 and mpoint_y < 0:
+				  arc_label.set('x',str(center- rvector_x*1.2))
+				  arc_label.set('y',str(center-rvector_y*1.2))
+				elif mpoint_x > 0 and mpoint_y > 0:
+					arc_label.set('x',str(center- rvector_x*1.2))
+					arc_label.set('y',str(center+rvector_y*1.2))
+				elif mpoint_x < 0 and mpoint_y > 0:
+					arc_label.set('x',str(center+ rvector_x))
+					arc_label.set('y',str(center+rvector_y*1.2))
 			arc_label.text = str(int(round(abs_per))) + '%'
 			arc_label.set('style',simplestyle.formatStyle(arc_label_style))
 			arc_labels.append(arc_label)
@@ -300,7 +334,7 @@ class statisticsGraph(inkex.Effect):
 			label_name.set('x',str(size*1.188))
 			label_name.set('y',str(h))
 			label_name.set('style',simplestyle.formatStyle(label_abs_style))
-			label_name.text = str(label)
+			label_name.text = label
 			legend.append(label_name)
 			
 			# Calculates legend box width and height

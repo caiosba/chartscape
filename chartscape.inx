@@ -6,7 +6,7 @@
 	<dependency type="executable" location="extensions">simplestyle.py</dependency>
 	<param name="title" type="string" _gui-text="Title">ChartScape</param>
 	<param name="values" type="string" _gui-text="Values (separated by spaces)">10 15 25 50</param>
-        <param name="labels" type="string" _gui-text="Labels (separated by spaces)">a b c d</param>
+        <param name="labels" type="string" _gui-text="Labels (separated by pipe)">a|b|c|d</param>
 	<param name="size" type="float" min="100.00" max="1000.00" _gui-text="Size">500</param>
 	<param name="color" type="optiongroup" _gui-text="Select color: ">
     		<option value="blue">Blue</option>
