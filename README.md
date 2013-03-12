@@ -39,4 +39,4 @@ Thanks to my friends:
 
 * Leandro Andrade, for correcting the percentages positions
 * Melissa Wen, for general improvements
-* Aurélio Heckert, which presented to me he awesome world of Inkscape extensions development
+* Aurélio Heckert, which presented to me the awesome world of Inkscape extensions development
