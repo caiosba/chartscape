@@ -30,7 +30,10 @@ To Do
 * Add new charts (line, bars, etc.)
 * Add more options (color palette, chart type, show legend, etc.)
 * Review code comments
-* Adjust percentages positions
+* Improve percentages positions (bug in case of a graph that begin with a option more than 50%)
+* Fix bug in calculation of rvector then module is zero (Ex: 40 15 25)
+* Fix bug: legend label is overwrite when has equal values (Ex: 35 10 10 20, legend label of second '10' is overwritten by first)
+
 
 Thanks
 ======
